@@ -92,7 +92,7 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - run:
-          name: Run backend test
+          name: Run backend scan
           command: |
             cd backend
             npm install
