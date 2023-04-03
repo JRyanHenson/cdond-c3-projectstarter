@@ -199,7 +199,7 @@ jobs:
           name: Install dependencies
           command: |
             apk add --update ansible
-            apk add aws-cli
+            apk add awscli
             apk add gzip
             apk add tar
       - run:
