@@ -181,13 +181,13 @@ jobs:
           command: |
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> inventory
+              --output text >> ~/inventory
               # exit 1
       
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory
+            - inventory
       # Here's where you will add some code to rollback on failure      
 
   configure-infrastructure:
