@@ -193,7 +193,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: cimg/base:2021.04
+      - image: cimg/python:3.11.2
     steps:
       # Checkout code from git
       # Add ssh keys with fingerprint
@@ -206,9 +206,12 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible
-            apk add gzip
-            apk add tar
+            sudo apt-add-repository ppa:ansible/ansible
+            sudo apt update
+            sudo apt install ansible
+            sudo apt install gzip
+            sudo apt intall tar
+
       - run:
           name: Configure server
           command: |
