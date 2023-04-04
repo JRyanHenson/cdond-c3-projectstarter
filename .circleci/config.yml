@@ -200,13 +200,13 @@ jobs:
       # attach workspace
       - checkout
       - add_ssh_keys:
-          fingerprints: ["ac:02:2e:6f:e2:2a:09:ea:83:64:a7:c8:61:6d:e5:cd"] # You can get this ID in the section where you registered the SSH Key
+          fingerprints: "ac:02:2e:6f:e2:2a:09:ea:83:64:a7:c8:61:6d:e5:cd" # You can get this ID in the section where you registered the SSH Key
       - attach_workspace:
           at: ~/
       - run:
           name: Install dependencies
           command: |
-            apk add ansible
+            apk add --update ansible
             apk add gzip
             apk add tar
       - run:
