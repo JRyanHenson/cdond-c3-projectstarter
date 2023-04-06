@@ -221,44 +221,64 @@ jobs:
             ansible-playbook -i ~/inventory configure-server.yml
       # Here's where you will add some code to rollback on failure      
 
-#   run-migrations:
-#     docker:
-#       # Docker image here that supports NodeJS
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Run migrations
-#           command: |
-#             # Your code here
-#             exit 1
-#       - run:
-#           name: Send migration results to memstash
-#           command: |
-#             # Your code here
-#             exit 1
-#      # Here's where you will add some code to rollback on failure      
-
-#   deploy-frontend:
-#     docker:
-#       # Docker image here that supports AWS CLI
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Get backend url
-#           command: |
-#             # your code here
-#             export API_URL="http://${BACKEND_IP}:3030"
-#             echo "${API_URL}"
-#       - run:
-#           name: Deploy frontend objects
-#           command: |
-#             # your code here
-#       # Here's where you will add some code to rollback on failure      
-                    
+  run-migrations:
+    docker:
+      - image: circleci/node:13.8.0
+    - checkout 
+    steps:
+      # Checkout code from git
+      - run:
+          name: Run migrations
+          command: |
+            cd backend
+            npm install
+            # Run and save the mgiration output
+            npm run migrations > migrations_dump.txt
+            # exit 1
+      - run:
+          name: Send migration results to memstash
+          command: |
+              if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+              then
+                  # If you are using memstash.io, generate the token "7933fe63-4687-4fa1-8426-aa25aa1730ec" on the website
+                  # curl -H "Content-Type: text/plain" -H "token: 7933fe63-4687-4fa1-8426-aa25aa1730ec" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
+                  # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
+                  curl https://kvdb.io/PbXTtqyuaB58GsbYo1zt95/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              fi   
+      # Here's where you will add some code to rollback on failure      
+  deploy-frontend:
+    docker:
+       - image: amazon/aws-cli
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/ 
+      - run:
+          name: Install dependencies
+          command: |
+              yum -y install python
+              yum -y install ansible
+              yum -y install node
+              yum -y install nmp 
+      - run:
+          name: Get backend url
+          command: |
+            # your code here
+            export BACKEND_IP=$(aws ec2 describe-instances...............)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
+      - run:
+          name: Deploy frontend objects
+          command: |
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      # Here's where you will add some code to rollback on failure      
+      - destroy_environment             
 #   deploy-backend:
 #     docker:
 #       # Docker image here that supports Ansible
