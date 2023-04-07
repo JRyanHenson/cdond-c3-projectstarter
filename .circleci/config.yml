@@ -4,7 +4,7 @@ orbs:
   # Choose either one of the orbs below
   # Declare a dependency on the welcome-orb
   # welcome: circleci/welcome-orb@0.4.1
-  aws-cli: circleci/aws-cli@2.0.3
+  aws-cli: circleci/aws-cli@3.1.5
 # Orchestrate or schedule a set of jobs
 
 commands:
@@ -231,6 +231,8 @@ jobs:
           name: Run migrations
           command: |
             cd backend
+            npm cache clean
+            rm -rf node_modules
             npm install
             # Run and save the mgiration output
             npm run migrations > migrations_dump.txt
