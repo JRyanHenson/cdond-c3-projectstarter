@@ -234,7 +234,7 @@ jobs:
             cd backend
             npm install
             # Run and save the migiration output
-            # npm run migrations > migrations_dump.txt
+            npm run migrations > migrations_dump.txt
             # exit 1
       - run:
           name: Send migration results to memstash
