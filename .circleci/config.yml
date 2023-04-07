@@ -211,7 +211,6 @@ jobs:
             sudo apt install ansible
             sudo apt install gzip
             sudo apt install tar
-
       - run:
           name: Configure server
           command: |
@@ -234,8 +233,8 @@ jobs:
           command: |
             cd backend
             npm install
-            # Run and save the mgiration output
-            npm run migrations > migrations_dump.txt
+            # Run and save the migiration output
+            # npm run migrations > migrations_dump.txt
             # exit 1
       - run:
           name: Send migration results to memstash
