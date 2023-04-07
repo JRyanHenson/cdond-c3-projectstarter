@@ -115,7 +115,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [frontend-build]
       - run:
           name: Run frontend scan
           command: |
@@ -226,13 +226,13 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       # Checkout code from git
-      - checkout 
+      - checkout
+      - restore_cache:
+          keys: [backend-build] 
       - run:
           name: Run migrations
           command: |
             cd backend
-            npm cache clean
-            rm -rf node_modules
             npm install
             # Run and save the mgiration output
             npm run migrations > migrations_dump.txt
