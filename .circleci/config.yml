@@ -263,7 +263,6 @@ jobs:
           name: Install dependencies
           command: |
             yum -y install python
-            yum -y install ansible
             yum -y install node
             yum -y install nmp 
       - run:
