@@ -263,7 +263,7 @@ jobs:
           name: Install dependencies
           command: |
             # yum -y install python
-            # yum -y install nodejs
+            sudo yum -y install nodejs
             # yum -y install nmp 
       - run:
           name: Get backend url
