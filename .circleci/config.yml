@@ -229,6 +229,10 @@ jobs:
       - restore_cache:
           keys: [backend-build] 
       - run:
+          name: Install awscli
+          command: |
+            yum install awscli 
+      - run:
           name: Run migrations
           command: |
             cd backend
