@@ -253,6 +253,8 @@ jobs:
        - image: cimg/aws:2023.04
     steps:
       - checkout
+      - restore_cache:
+          keys: [frontend-build]
       - run:
           name: Install tar and gzip
           command: |
