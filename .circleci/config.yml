@@ -231,7 +231,7 @@ jobs:
       - run:
           name: Install awscli
           command: |
-            yum install awscli 
+            apt install awscli 
       - run:
           name: Run migrations
           command: |
