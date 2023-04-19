@@ -255,7 +255,7 @@ jobs:
       - destroy-environment       
   deploy-frontend:
     docker:
-       - image: cimg/aws:2023.04
+       - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
@@ -271,8 +271,7 @@ jobs:
           command: |
             sudo apt update
             sudo apt install -y python3
-            sudo apt install nodejs npm
-            # yum -y install nmp 
+            sudo apt install -y awscli
       - run:
           name: Get backend url
           command: |
