@@ -1,5 +1,5 @@
 ---
- name: Extract and start app
+- name: Extract and start app
   become: true
   vars:
     app_dir: "/opt/myapp"
