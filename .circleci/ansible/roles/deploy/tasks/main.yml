@@ -1,0 +1,14 @@
+---
+ name: Extract and start app
+  become: true
+  vars:
+    app_dir: "/opt/myapp"
+  tasks:
+    - name: Extract artifact
+      unarchive:
+        src: ./artifact.tar.gz
+        dest: "{{ app_dir }}"
+        remote_src: true
+        copy: false
+    - name: Start app
+      command: "{{ app_dir }}/start.sh"
