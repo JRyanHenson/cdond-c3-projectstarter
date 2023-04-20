@@ -252,7 +252,8 @@ jobs:
                   curl https://kvdb.io/7YZXfGHu4Ay6h7eckGH5YF/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
               fi   
       # Here's where you will add some code to rollback on failure
-      - destroy-environment       
+      - destroy-environment      
+
   deploy-frontend:
     docker:
        - image: circleci/node:13.8.0
@@ -290,23 +291,42 @@ jobs:
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       # Here's where you will add some code to rollback on failure      
-      - destroy-environment             
-#   deploy-backend:
-#     docker:
-#       # Docker image here that supports Ansible
-#     steps:
-#       # Checkout code from git
-#       # Add ssh keys with fingerprint
-#       # attach workspace
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Deploy backend
-#           command: |
-#             # your code here
-#       # Here's where you will add some code to rollback on failure  
+      - destroy-environment
+
+  deploy-backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      # Checkout code from git
+      # Add ssh keys with fingerprint
+      # attach workspace
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["ac:02:2e:6f:e2:2a:09:ea:83:64:a7:c8:61:6d:e5:cd"] # You can get this ID in the section where you registered the SSH Key
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt update
+            sudo apt install ansible
+            sudo apt install gzip
+            sudo apt install tar
+      - run:
+          name: Deploy backend
+          command: |
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            # Zip the directory
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+      # Here's where you will add some code to rollback on failure  
+      - destroy-environment 
 
 #   # smoke-test:
 #   #   docker:
@@ -389,8 +409,8 @@ workflows:
            requires: [configure-infrastructure]
       - deploy-frontend:
            requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
