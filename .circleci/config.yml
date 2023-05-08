@@ -312,6 +312,7 @@ jobs:
             sudo apt install ansible
             sudo apt install gzip
             sudo apt install tar
+            sudo apt install awscli
       - run:
           name: Deploy backend
           command: |
