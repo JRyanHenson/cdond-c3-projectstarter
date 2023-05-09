@@ -222,7 +222,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: cmig/node:13.8.0
+      - image: cimg/node:13.8.0
     steps:
       # Checkout code from git
       - checkout
@@ -257,7 +257,7 @@ jobs:
 
   deploy-frontend:
     docker:
-       - image: cmig/node:13.8.0
+       - image: cimg/node:13.8.0
     steps:
       - checkout
       - restore_cache:
@@ -297,7 +297,7 @@ jobs:
 
   deploy-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:13.8.0
     steps:
       # Checkout code from git
       # Add ssh keys with fingerprint
