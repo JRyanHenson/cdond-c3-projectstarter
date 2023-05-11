@@ -311,7 +311,7 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt update -y
-            suod apt upgrade -y
+            sudo apt upgrade -y
             sudo apt install -y ansible
             sudo apt install -y gzip
             sudo apt install -y tar
